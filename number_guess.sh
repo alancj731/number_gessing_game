@@ -42,6 +42,7 @@ do
 	if [[ ! $GUESS =~ ^[0-9]+$ ]]
 	then
 		echo "That is not an integer, guess again:"
+		TRIES=$[ $TRIES + 1 ]
 		continue
 	fi	
 	# increase guessed tries by 1
