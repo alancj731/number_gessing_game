@@ -22,9 +22,13 @@ else
 	echo -e "Welcome, $USERNAME! It looks like this is your first time here."
         # set GAMES_PLAYED to 0
 	GAMES_PLAYED=0	
+	# set BEST_GAME to 1001
+	BEST_GAME=1001
+	# insert data into database
+	INSERT_RESULT=$($PSQL "INSERT INTO records(user_name, games_played, best_game) VALUES('$USERNAME', $GAMES_PLAYED, $BEST_GAME);")
 fi
-SECRET=$[ RANDOM%5 + 1 ]
-GUESSED=0
+SECRET=$[ RANDOM%1000 + 1 ]
+TRIES=0
 FOUND="false"
 
 echo Guess the secret number between 1 and 1000:
@@ -39,11 +43,11 @@ do
 		continue
 	fi	
 	# increase guessed tries by 1
-	GUESSED=$[ $GUESSED + 1 ]
+	TRIES=$[ $TRIES + 1 ]
 	echo YOU GUESSED $GUESSED TIMES
 	if [[ $GUESS = $SECRET ]]
 	then	
-		echo "You gessed it in $GUESSED tries. The secret number was $SECRET. Nice job!"
+		echo "You gessed it in $TRIES tries. The secret number was $SECRET. Nice job!"
 		FOUND="true"
 	else
 		if [[ $GUESS < $SECRET ]]
@@ -54,3 +58,12 @@ do
 		fi
 	fi
 done
+# update GAMES_PLAYED
+GAMES_PLAYED=$[ $GAMES_PLAYED + 1 ]
+# check if the user has the best tries number
+if [[ $TRIES < $BEST_GAME ]]
+then
+	BEST_GAME=$TRIES
+fi
+# update the database
+UPDATERESULT=$($PSQL "UPDATE records SET games_played=$GAMES_PLAYED, best_game=$BEST_GAME WHERE user_name='$USERNAME';") 
