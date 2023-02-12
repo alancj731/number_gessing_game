@@ -22,7 +22,7 @@ then
 	echo -e "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses." 
 else
 	echo -e "Welcome, $USERNAME! It looks like this is your first time here."
-        # set GAMES_PLAYED to 0
+        set GAMES_PLAYED to 0
 	GAMES_PLAYED=0	
 	# set BEST_GAME to 1001
 	# BEST_GAME=1001
@@ -38,15 +38,14 @@ echo Guess the secret number between 1 and 1000:
 while [[ $FOUND == "false" ]]
 do
 	read GUESS
+	TRIES=$[ $TRIES + 1 ]
 	# check if input is an integer
 	if [[ ! $GUESS =~ ^[0-9]+$ ]]
 	then
 		echo "That is not an integer, guess again:"
-		TRIES=$[ $TRIES + 1 ]
 		continue
 	fi	
 	# increase guessed tries by 1
-	TRIES=$[ $TRIES + 1 ]
 	if [[ $GUESS = $SECRET ]]
 	then	
 		echo "You guessed it in $TRIES tries. The secret number was $SECRET. Nice job!"
